@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>F1 Dashboard</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header>
+    <div id="logo">
+      <img src="f1logo.jpg" alt="Logo" />
+    </div>
+    <h1>F1 Dashboard Project</h1>
+    <nav>
+      <button id="home-btn">Home</button>
+      <button id="favorites-btn">Favorites</button>
+    </nav>
+  </header>
+  
+
+  <main>
+    <div id="home-view" class="view">
+      <aside>
+        <p>Welcome to the F1 Dashboard! Select a season to view races and their results.</p>
+        <label for="season-select">Season:</label>
+        <select id="season-select">
+          <option value="" disabled selected>Select a season</option>
+          <option value="2020">2020</option>
+          <option value="2021">2021</option>
+          <option value="2022">2022</option>
+          <option value="2023">2023</option>
+        </select>
+      </aside>
+      <div>
+        <h2>About This Project</h2>
+        <div class="content-with-image">
+          <div class="text-content">
+            <p>This F1 Dashboard is a single-page application (SPA) built with HTML, CSS, and JavaScript. It allows users to
+              explore Formula 1 data for different seasons, including race details, qualifying results, driver information,
+              and constructor standings.</p>
+            <h3>Technologies Used</h3>
+            <ul>
+              <li>HTML</li>
+              <li>CSS</li>
+              <li>JavaScript</li>
+              <li>Fetch API (for data retrieval)</li>
+              <li>Local Storage (for caching data)</li>
+            </ul>
+            <h3>Group Members</h3>
+            <p>Sahil Grewal, Dorart Barku</p>
+            <h3>GitHub Repository</h3>
+            <a href="">Link to your GitHub repository</a>
+          </div>
+          <img src="Sahil-Dorart.jpg" alt="F1 Banner" id="front-page-image">
+        </div>
+      </div>
+    </div>
+  
+  
+      
+
+    <div id="races-view" class="view" style="display: none;">
+      <h2>Races</h2>
+      <table id="races-table">
+        <thead>
+          <tr>
+            <th class="sortable-column" data-sort-type="number">Rnd</th>
+            <th class="sortable-column" data-sort-type="string">Name</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="races-list"></tbody>
+      </table>
+      <div id="results-details" style="display: none;">
+        <h3>Results</h3>
+        <div id="qualifying"></div>
+        <div id="results"></div>
+      </div>
+    </div>
+
+    <dialog id="constructor-popup">
+      <button id="close-constructor-popup" class="close-popup-btn">&times;</button>
+      <div>
+        <h2 id="constructor-name"></h2>
+        <p id="constructor-details"></p>
+        <h3>Race Results</h3>
+        <table id="constructor-results-table">
+          <thead>
+            <tr>
+              <th class="sortable-column" data-sort-type="number">Rnd</th>
+              <th class="sortable-column" data-sort-type="string">Race Name</th>
+              <th class="sortable-column" data-sort-type="string">Driver</th>
+              <th class="sortable-column" data-sort-type="number">Pos</th>
+            </tr>
+          </thead>
+          <tbody id="constructor-race-results"></tbody>
+        </table>
+      </div>
+    </dialog>
+
+    <dialog id="driver-popup">
+      <button id="close-driver-popup" class="close-popup-btn">&times;</button>
+      <div>
+        <h2 id="driver-name"></h2>
+        <p id="driver-details"></p>
+        <div id="driver-image-container">
+          <img id="driver-image" alt="Driver Image" />
+        </div>
+        <h3>Race Results</h3>
+        <table id="driver-results-table">
+          <thead>
+            <tr>
+              <th class="sortable-column" data-sort-type="number">Rnd</th>
+              <th class="sortable-column" data-sort-type="string">Race Name</th>
+              <th class="sortable-column" data-sort-type="number">Pos</th>
+              <th class="sortable-column" data-sort-type="number">Points</th>
+            </tr>
+          </thead>
+          <tbody id="driver-race-results"></tbody>
+        </table>
+        <button id="bottom-close-driver-popup" class="close-popup-btn">Close</button>
+      </div>
+    </dialog>
+
+    <dialog id="circuit-popup">
+      <div class="popup-header">
+        <h2 id="circuit-name">Circuit Name</h2>
+        <button class="close-popup-btn">×</button>
+      </div>
+      <div class="popup-body">
+        <div class="circuit-details">
+          <img id="circuit-image" src="" alt="Circuit Image" />
+          <p id="circuit-details"></p>
+        </div>
+      </div>
+      <div class="popup-footer">
+        <button class="close-popup-btn">Close</button>
+      </div>
+    </dialog>
+  </main>
+
+  <script src="js/app.js"></script>
+
+</body>
+</html>
