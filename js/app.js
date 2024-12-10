@@ -386,78 +386,84 @@ favoriteBtn.addEventListener("click", () => {
   }
 
   function showConstructorPopup(constructorId) {
-    const constructor = constructorsMap[constructorId];
-
-    if (!constructor) {
-      return;
+    const storedConstructor = localStorage.getItem(`constructor-${constructorId}`);
+    let constructor;
+  
+    if (storedConstructor) {
+      constructor = JSON.parse(storedConstructor);
+    } else {
+      constructor = constructorsMap[constructorId]; 
+      if (constructor) {
+        localStorage.setItem(`constructor-${constructorId}`, JSON.stringify(constructor));
+      }
     }
-
+  
+    if (!constructor) {
+      console.error(`Constructor not found for ID: ${constructorId}`);
+      return; 
+    }
+  
     constructorNameElem.textContent = constructor.name || "Unknown Constructor";
-
-  constructorDetailsElem.innerHTML = `
-    Nationality: ${constructor.nationality}<br>
-    <a href="${constructor.url || "#"}" target="_blank" rel="noopener noreferrer">
-      ${constructor.url ? "View Constructor Details" : "No URL Available"} 
-    </a>
-    <button class="favorite-btn" data-constructor-id="${constructor.id}">
-      ${favorites.constructors.includes(constructor.name)  
-          ? "Remove from Favorites"
-          : "Add to Favorites"}
-    </button>
-  `;
-
-
+  
+    constructorDetailsElem.innerHTML = `
+      Nationality: ${constructor.nationality}<br>
+      <a href="${constructor.url || "#"}" target="_blank" rel="noopener noreferrer">
+        ${constructor.url ? "View Constructor Details" : "No URL Available"} 
+      </a>
+      <button class="favorite-btn" data-constructor-id="${constructor.id}">
+        ${favorites.constructors.includes(constructor.name) ? "Remove from Favorites" : "Add to Favorites"}
+      </button>
+    `;
+  
     const raceResults = resultsData.filter(
       (result) => result.constructor.id === constructorId,
     );
-
     raceResults.sort((a, b) => a.race.round - b.race.round);
-
+  
     constructorRaceResultsElem.innerHTML = raceResults
-  .map(
-    (result) => `
-      <tr>
-        <td>${result.race.round}</td> 
-        <td>${result.race.name}</td>
-        <td>${driversMap[result.driver.id]
-            ? driversMap[result.driver.id].forename +
-              " " +
-              driversMap[result.driver.id].surname
-            : "Unknown Driver"}
-        </td>
-        <td>${result.position || "-"}</td> 
-      </tr>
-    `,
-  )
-  .join("");
-
+      .map(
+        (result) => `
+          <tr>
+            <td>${result.race.round}</td> 
+            <td>${result.race.name}</td>
+            <td>${driversMap[result.driver.id]
+                ? driversMap[result.driver.id].forename +
+                  " " +
+                  driversMap[result.driver.id].surname
+                : "Unknown Driver"}
+            </td>
+            <td>${result.position || "-"}</td> 
+          </tr>
+        `,
+      )
+      .join("");
+  
     if (!document.querySelector("#bottom-close-constructor-popup")) {
       const popupFooter = document.createElement("div");
       popupFooter.classList.add("popup-footer");
       popupFooter.innerHTML = `
-            <button id="bottom-close-constructor-popup" class="close-popup-btn">Close</button>
-          `;
+              <button id="bottom-close-constructor-popup" class="close-popup-btn">Close</button>
+            `;
       constructorPopup.appendChild(popupFooter);
-
+  
       document
         .querySelector("#bottom-close-constructor-popup")
         .addEventListener("click", () => constructorPopup.close());
     }
-
+  
     const favoriteBtn = document.querySelector(`#constructor-popup .favorite-btn`);
     favoriteBtn.addEventListener("click", () => {
       toggleFavorite("constructor", constructorId, constructor.name);
       favoriteBtn.textContent = favorites.constructors.includes(constructor.name) 
         ? "Remove from Favorites"
         : "Add to Favorites";
-    
     });
-
+  
     closeConstructorPopup.addEventListener("click", () => constructorPopup.close());
-
+  
     constructorPopup.showModal();
-
-    addSortingFunctionality("constructor-results-table");
+  
+    addSortingFunctionality("constructor-results-table"); 
   }
 
   document.addEventListener("click", (event) => {
@@ -469,42 +475,51 @@ favoriteBtn.addEventListener("click", () => {
   });
 
   function showDriverPopup(driverId) {
-    const driver = driversMap[driverId];
-
+    const driverStored = localStorage.getItem(`driver-${driverId}`);
+    let driver;
+    if (driverStored) {
+      driver = JSON.parse(driverStored);
+    } else {
+      driver = driversMap[driverId];
+      if (driver) {
+        localStorage.setItem(`driver-${driverId}`, JSON.stringify(driver));
+      }
+    }
+  
     if (!driver) return;
-
+  
     driverNameElem.textContent = `${driver.forename} ${driver.surname}`;
-  driverDetailsElem.innerHTML = `
-    Nationality: ${driver.nationality}<br>
-    Date of Birth: ${driver.dob}<br>
-    <a href="${driver.url || "#"}" target="_blank" rel="noopener noreferrer">
-      ${driver.url ? "View Driver Details" : "No URL Available"} 
-    </a>
-    <button class="favorite-btn" data-driver-id="${driver.driverId}">
-      ${favorites.drivers.includes(driver.driverId)
+    driverDetailsElem.innerHTML = `
+      Nationality: ${driver.nationality}<br>
+      Date of Birth: ${driver.dob}<br>
+      <a href="${driver.url || "#"}" target="_blank" rel="noopener noreferrer">
+        ${driver.url ? "View Driver Details" : "No URL Available"} 
+      </a>
+      <button class="favorite-btn" data-driver-id="${driver.driverId}">
+        ${favorites.drivers.includes(driver.driverId) 
           ? "Remove from Favorites"
           : "Add to Favorites"}
-    </button>
-  `;
-
-  const driverImageUrl = driver.image || `https://placehold.co/300x200?text=${driver.forename}+${driver.surname}`; 
+      </button>
+    `;
+  
+    const driverImageUrl = driver.image || `https://placehold.co/300x200?text=${driver.forename}+${driver.surname}`; 
     driverImageElem.src = driverImageUrl;
     driverImageElem.alt =`${driver.forename} ${driver.surname}`;
-
+  
     const raceResults = resultsData.filter((result) => result.driver.id === driverId);
     raceResults.sort((a, b) => a.race.round - b.race.round);
-
+  
     driverRaceResultsElem.innerHTML = raceResults
       .map((result) => `
-            <tr>
-              <td>${result.race.round}</td>
-              <td>${result.race.name}</td>
-              <td>${result.position || "-"}</td>
-              <td>${result.points || "0"}</td>
-            </tr>
-          `)
+          <tr>
+            <td>${result.race.round}</td>
+            <td>${result.race.name}</td>
+            <td>${result.position || "-"}</td>
+            <td>${result.points || "0"}</td>
+          </tr>
+        `)
       .join("");
-
+  
     if (!document.querySelector("#bottom-close-driver-popup")) {
       const popupFooter = document.createElement("div");
       popupFooter.classList.add("popup-footer");
@@ -512,36 +527,41 @@ favoriteBtn.addEventListener("click", () => {
             <button id="bottom-close-driver-popup" class="close-popup-btn">Close</button>
           `;
       driverPopup.appendChild(popupFooter);
-
+  
       document
         .querySelector("#bottom-close-driver-popup")
         .addEventListener("click", () => driverPopup.close());
     }
-
+  
     const favoriteBtn = document.querySelector(`#driver-popup .favorite-btn`);
-favoriteBtn.addEventListener("click", () => {
-  toggleFavorite("driver", driverId, `${driver.forename} ${driver.surname}`);
-  favoriteBtn.textContent = favorites.drivers.includes(`${driver.forename} ${driver.surname}`)
-    ? "Remove from Favorites"
-    : "Add to Favorites";
+  
+    favoriteBtn.textContent = favorites.drivers.includes(`${driver.forename} ${driver.surname}`)
+      ? "Remove from Favorites"
+      : "Add to Favorites"; 
+  
+    favoriteBtn.addEventListener("click", () => {
+      toggleFavorite("driver", driverId, `${driver.forename} ${driver.surname}`);
+      favoriteBtn.textContent = favorites.drivers.includes(`${driver.forename} ${driver.surname}`)
+        ? "Remove from Favorites"
+        : "Add to Favorites";
     });
-
+  
     const topCloseButton = document.querySelector("#close-driver-popup");
     const bottomCloseButton = document.querySelector("#bottom-close-driver-popup");
-
+  
     function closePopup() {
       driverPopup.close();
     }
-
-    topCloseButton.removeEventListener("click", closePopup);
-    bottomCloseButton.removeEventListener("click", closePopup);
-
+  
+    topCloseButton.removeEventListener("click", closePopup); 
+    bottomCloseButton.removeEventListener("click", closePopup); 
+  
     topCloseButton.addEventListener("click", closePopup);
     bottomCloseButton.addEventListener("click", closePopup);
-
+  
     driverPopup.showModal();
-
-    addSortingFunctionality("driver-results-table");
+  
+    addSortingFunctionality("driver-results-table"); 
   }
 
   document.addEventListener("click", (event) => {
@@ -575,44 +595,47 @@ favoriteBtn.addEventListener("click", () => {
     saveFavorites();
 }
 
-  function addSortingFunctionality(table) {
-    if (!table) return; 
-  
-    const headers = table.querySelectorAll("th.sortable-column");
-  
-    headers.forEach((header) => {
-      header.addEventListener("click", () => {
-        const sortType = header.dataset.sortType;
-        const columnIndex = Array.from(header.parentNode.children).indexOf(header);
-  
-        const tbody = table.querySelector("tbody");
-        const rows = Array.from(tbody.querySelectorAll("tr"));
-        const data = rows.map((row) => {
-          const cell = row.children[columnIndex];
-          const cellValue = sortType === "number" ?
-            parseInt(cell.textContent) :
-            cell.textContent.trim();
-          return {
-            row: row,
-            value: cellValue,
-          };
-        });
-  
-        data.sort((a, b) => {
-          if (sortType === "number") {
-            return isAscending ? a.value - b.value : b.value - a.value;
-          } else {
-            const comparison = a.value.localeCompare(b.value);
-            return isAscending ? comparison : -comparison;
-          }
-        });
-  
-        data.forEach((item) => tbody.appendChild(item.row));
-  
-        isAscending = !isAscending;
+function addSortingFunctionality(tableId) {
+  if (!tableId) return;
+
+  const table = document.querySelector(`#${tableId}`); 
+  if (!table) return;
+
+  const headers = table.querySelectorAll("th.sortable-column");
+
+  headers.forEach((header) => {
+    header.addEventListener("click", () => {
+      const sortType = header.dataset.sortType;
+      const columnIndex = Array.from(header.parentNode.children).indexOf(header);
+
+      const tbody = table.querySelector("tbody"); 
+      const rows = Array.from(tbody.querySelectorAll("tr"));
+      const data = rows.map((row) => {
+        const cell = row.children[columnIndex];
+        const cellValue = sortType === "number"
+          ? parseInt(cell.textContent)
+          : cell.textContent.trim();
+        return {
+          row: row,
+          value: cellValue,
+        };
       });
+
+      data.sort((a, b) => {
+        if (sortType === "number") {
+          return isAscending ? a.value - b.value : b.value - a.value;
+        } else {
+          const comparison = a.value.localeCompare(b.value);
+          return isAscending ? comparison : -comparison;
+        }
+      });
+
+      data.forEach((item) => tbody.appendChild(item.row));
+
+      isAscending = !isAscending;
     });
-  }
+  });
+}
   
  
   const myTable = document.querySelector(".my-table"); 
