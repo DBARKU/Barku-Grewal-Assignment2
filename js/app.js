@@ -487,7 +487,7 @@ favoriteBtn.addEventListener("click", () => {
     </button>
   `;
 
-    const driverImageUrl = driver.image || `https://placehold.co/300x200?text=<span class="math-inline">\{driver\.forename\}\+</span>{driver.surname}`;
+  const driverImageUrl = driver.image || `https://placehold.co/300x200?text=${driver.forename}+${driver.surname}`; 
     driverImageElem.src = driverImageUrl;
     driverImageElem.alt =`${driver.forename} ${driver.surname}`;
 
