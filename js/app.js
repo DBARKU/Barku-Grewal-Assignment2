@@ -554,26 +554,26 @@ favoriteBtn.addEventListener("click", () => {
 
   function toggleFavorite(type, id, name) {
     if (type === "driver") {
-      if (favorites.drivers.includes(name)) {  
-        favorites.drivers = favorites.drivers.filter((favName) => favName !== name);
-      } else {
-        favorites.drivers.push(name);
-      }
+        if (favorites.drivers.includes(name)) {  
+            favorites.drivers = favorites.drivers.filter((favName) => favName !== name);
+        } else {
+            favorites.drivers.push(name); 
+        }
     } else if (type === "constructor") {
-      if (favorites.constructors.includes(name)) {  
-        favorites.constructors = favorites.constructors.filter((favName) => favName !== name);
-      } else {
-        favorites.constructors.push(name);
-      }
+        if (favorites.constructors.includes(name)) {  
+            favorites.constructors = favorites.constructors.filter((favName) => favName !== name);
+        } else {
+            favorites.constructors.push(name);
+        }
     } else if (type === "circuit") {
-      if (favorites.circuits.includes(name)) {  D
-        favorites.circuits = favorites.circuits.filter((favName) => favName !== name);
-      } else {
-        favorites.circuits.push(name);
-      }
+        if (favorites.circuits.includes(name)) {  
+            favorites.circuits = favorites.circuits.filter((favName) => favName !== name);
+        } else {
+            favorites.circuits.push(name);
+        }
     }
     saveFavorites();
-  }
+}
 
   function addSortingFunctionality(table) {
     if (!table) return; 
